@@ -93,16 +93,11 @@ if __name__ == '__main__':
                 	if avg is True:
                         	print('averaging dataframes, both obs and mod columns (e.g., for multiple years)...')
                         	df_species_obs = (df[sub_map]+df_merge[sub_map])/2. #get observations column(s) ave
-                        	#df_species_obs = df_species_obs.add_suffix('_ave'+str(count+1))
                         	df_species_mod = (df[sub_maps]+df_merge[sub_maps])/2. # get model column(s) ave
-                        	#df_species_mod = df_species_mod.add_suffix('_ave'+str(count+1))
                         	df_merge=df_merge.drop(sub_map,axis=1) #drop prev obs columns
                         	df_merge=df_merge.drop(sub_maps,axis=1) #drop old mod columns
                         	df_merge=df_merge.join(df_species_obs) #merge observation column(s)
                         	df_merge=df_merge.join(df_species_mod) #merge model column(s)
-                       		#df_merge=df_merge.drop(sub_map,axis=1) #drop old obs columns
-                        	#df_merge=df_merge.drop(sub_maps,axis=1) #drop old mod columns
-                        	#df_merge.columns=df_merge.columns.str.strip(to_strip='_ave'+str(count+1)) #strip average suffixes
                 	else:
                			print('joining dataframes, just add mod columns (e.g., for multiple model runs)...')
                 		df_merge=df_merge.join(df_species)
