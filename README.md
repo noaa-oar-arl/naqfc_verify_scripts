@@ -1,6 +1,6 @@
 # naqfc_verify_scripts
 New command-line python scripts for regional NAQFC AIRNOW-CMAQ and global FV3-Open-AQ (limited) verification using MONETv2.
-
+Currently supported to work with MONETv2.1.4+
 Invoking each script with -help will show the list of arguments available.
 
 AIRNOW chemical and meteorological verification is avaialable for the following species:
