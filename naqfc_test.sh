@@ -2,7 +2,7 @@
 
 #Example script to invoke all MONETv2 AIRNOW Evaluation package scripts
 
-source /data/aqf2/barryb/anaconda2/bin/activate website
+source /data/aqf2/barryb/anaconda2/bin/activate monetdev
 
 # get the 48-hour date to current
 #date
