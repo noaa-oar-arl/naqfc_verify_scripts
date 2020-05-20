@@ -136,4 +136,7 @@ if __name__ == '__main__':
             'dfpair',
             format='table',
             mode='w')
+    dfpair.to_csv(
+            'AIRNOW_CMAQ_' + start.strftime('%Y-%m-%d-%H') + '_' +
+            end.strftime('%Y-%m-%d-%H') + '_pair.csv')
     sys.exit(0)
