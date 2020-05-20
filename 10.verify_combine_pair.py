@@ -92,12 +92,11 @@ if __name__ == '__main__':
                 	df_species = df_species.add_suffix('_'+str(count+1))
                 	if avg is True:
                         	print('averaging dataframes, both obs and mod columns (e.g., for multiple years)...')
-                        	df_species_obs = (df[sub_map]+df_merge[sub_map])/2. #get observations column(s) ave
-                        	df_species_mod = (df[sub_maps]+df_merge[sub_maps])/2. # get model column(s) ave
-                        	df_merge=df_merge.drop(sub_map,axis=1) #drop prev obs columns
-                        	df_merge=df_merge.drop(sub_maps,axis=1) #drop old mod columns
-                        	df_merge=df_merge.join(df_species_obs) #merge observation column(s)
-                        	df_merge=df_merge.join(df_species_mod) #merge model column(s)
+                        	df_merge['date']=df_merge.time.dt.strftime('%m-%d-%H-%M')
+                       		df['date']=df.time.dt.strftime('%m-%d-%H-%M')
+                        	df_merge = pd.concat([df_merge, df]).groupby(['date','siteid','epa_region'], as_index=False).mean()
+                        	df_merge['time']=df.time
+                        	df_merge['time_local']=df.time_local
                 	else:
                			print('joining dataframes, just add mod columns (e.g., for multiple model runs)...')
                 		df_merge=df_merge.join(df_species)
