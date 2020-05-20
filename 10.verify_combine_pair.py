@@ -94,7 +94,7 @@ if __name__ == '__main__':
                         	print('averaging dataframes, both obs and mod columns (e.g., for multiple years)...')
                         	df_merge['date']=df_merge.time.dt.strftime('%m-%d-%H-%M')
                        		df['date']=df.time.dt.strftime('%m-%d-%H-%M')
-                        	df_merge = pd.concat([df_merge, df]).groupby(['date','siteid','epa_region'], as_index=False).mean()
+                        	df_merge = pd.concat([df_merge, df]).groupby(['date','siteid','epa_region','state_name'], as_index=False).mean()
                         	df_merge['time']=df.time
                         	df_merge['time_local']=df.time_local
                 	else:
