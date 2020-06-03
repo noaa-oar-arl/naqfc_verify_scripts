@@ -132,6 +132,7 @@ if __name__ == '__main__':
     parser.add_argument('-ed',  '--enddate',     help='string end date to isolate periods for statistics YYYY-MM-DD HH:MM:SS', type=str, required=False, default=None)
     parser.add_argument('-s',   '--species',     help='string/list input for obs species-variables to create stats',type=str,nargs='+', required=False, default=['OZONE','PM2.5'])
     parser.add_argument('-b',   '--subset_epa',  help='boolean set to True for subsetting by U.S. EPA region', type=bool, required=False, default=False)
+    parser.add_argument('-sn',  '--subset_name', help='name of subset type (epa_region or state_name)', type=str, required=False, default='epa_region')
     parser.add_argument('-e',   '--epa_regions', help='string/list input for set U.S. EPA regions',type=str,nargs='+', required=False, default=['R1'])
     parser.add_argument('-v',   '--verbose',     help='print debugging information', action='store_true', required=False)
     args = parser.parse_args()
@@ -142,6 +143,7 @@ if __name__ == '__main__':
     enddate      = args.enddate
     species      = args.species
     subset_epa   = args.subset_epa
+    subset_name  = args.subset_name
     epa_regions  = args.epa_regions
     verbose      = args.verbose
 
@@ -163,7 +165,10 @@ if __name__ == '__main__':
           enddatename  ='Period'
 
        if subset_epa is True:
-          df.query('epa_region == '+'"'+ee+'"',inplace=True)
+          if subset_name is 'epa_region':
+            df.query('epa_region == '+'"'+ee+'"',inplace=True)
+          if subset_name is 'state_name':
+            df.query('state_name == '+'"'+ee+'"',inplace=True)
        if reg is True and subset_epa is False:
           stats=open(finput.replace('.hdf','_')+startdatename+'_'+enddatename+'_reg_stats_domain.txt','w')
        elif reg is True and subset_epa is True:

@@ -87,7 +87,10 @@ def make_timeseries_epa(
     import seaborn as sns
 
     df.index=df.time
-    df.query('epa_region == '+'"'+region+'"',inplace=True)
+    if subset_name is 'epa_region':
+     df.query('epa_region == '+'"'+region+'"',inplace=True)
+    if subset_name is 'state_name':
+     df.query('state_name == '+'"'+region+'"',inplace=True)
     if modcount == 0:
      ax=df[col1].resample('H').mean().plot(marker='.',color='darkslategrey',label='OBS')
      ax=df[col2].resample('H').mean().plot(ax=ax,label='MOD')   
@@ -168,6 +171,12 @@ if __name__ == '__main__':
         required=False,
         default='R1')
     parser.add_argument(
+        '-sn',
+        '--subset_name',
+        help='name of subset type (epa_region or state_name)',
+        required=False,
+        default='epa_region')
+    parser.add_argument(
         '-miny', '--miny_scale', help='Set static min y-scale', type=float, required=False, default=None)
     parser.add_argument(
         '-maxy', '--maxy_scale', help='Set static max y-scale', type=float, required=False, default=None)
@@ -189,6 +198,7 @@ if __name__ == '__main__':
     enddate     = args.enddate
     reg         = args.regulatory
     region      = args.epa_region
+    subset_name = args.subset_name
     vmin        = args.miny_scale
     vmax        = args.maxy_scale
     ylog        = args.ylog_scale
