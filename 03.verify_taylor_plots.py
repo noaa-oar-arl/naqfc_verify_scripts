@@ -24,7 +24,6 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 import numpy as np
-
 import monet
 from monet.util.tools import calc_8hr_rolling_max,calc_24hr_ave,get_relhum
 sns.set_context('notebook')
@@ -62,10 +61,11 @@ def make_taylor_diagram(df, col1, col2, scale, savename,date=None):
     #dt = date - initial_datetime
     #dtstr = str(dt.days * 24 + dt.seconds // 3600).zfill(2)
     plt.legend(loc=(.8, .8))
-    name = "{}.{}.jpg".format(savename, date.strftime('tyr.%d%H'))
-    
+#    name = "{}.{}.jpg".format(savename, date.strftime('tyr.%d%H'))
+#    name = "{}.tyr.pdf".format(savename)
+    name = "{}.{}.pdf".format(savename, date.strftime('tyr.%d%H')) 
     monet.plots.savefig(
-        name, bbox_inches='tight', dpi=100, loc=3, decorate=True)
+        name, bbox_inches='tight', dpi=100, loc=3, decorate=False)
     return dia 
 
 def make_plots(df, variable, obs_variable, startdate, enddate, scale, out_name):
