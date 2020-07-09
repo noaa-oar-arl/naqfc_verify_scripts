@@ -91,6 +91,8 @@ def make_timeseries_epa(
      df.query('epa_region == '+'"'+region+'"',inplace=True)
     if subset_name is 'state_name':
      df.query('state_name == '+'"'+region+'"',inplace=True)
+    if subset_name is 'siteid':
+     df.query('siteid == '+'"'+region+'"',inplace=True)
     if modcount == 0:
      ax=df[col1].resample('H').mean().plot(marker='.',color='darkslategrey',label='OBS')
      ax=df[col2].resample('H').mean().plot(ax=ax,label='MOD')   
@@ -167,13 +169,13 @@ if __name__ == '__main__':
     parser.add_argument(
         '-e',
         '--epa_region',
-        help='EPA Region ACRONYM',
+        help='EPA Region acronymn, state name, or siteid',
         required=False,
         default='R1')
     parser.add_argument(
         '-sn',
         '--subset_name',
-        help='name of subset type (epa_region or state_name)',
+        help='name of subset type (epa_region, state_name, or siteid)',
         required=False,
         default='epa_region')
     parser.add_argument(
