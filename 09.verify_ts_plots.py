@@ -87,11 +87,13 @@ def make_timeseries_epa(
     import seaborn as sns
 
     df.index=df.time
-    if subset_name is 'epa_region':
+    print(subset_name)
+    if subset_name == 'epa_region':
      df.query('epa_region == '+'"'+region+'"',inplace=True)
-    if subset_name is 'state_name':
+    if subset_name == 'state_name':
      df.query('state_name == '+'"'+region+'"',inplace=True)
-    if subset_name is 'siteid':
+    if subset_name == 'siteid':
+     print('subsetting...')
      df.query('siteid == '+'"'+region+'"',inplace=True)
     if modcount == 0:
      ax=df[col1].resample('H').mean().plot(marker='.',color='darkslategrey',label='OBS')

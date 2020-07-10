@@ -165,11 +165,11 @@ if __name__ == '__main__':
           enddatename  ='Period'
 
        if subset_epa is True:
-          if subset_name is 'epa_region':
+          if subset_name == 'epa_region':
             df.query('epa_region == '+'"'+ee+'"',inplace=True)
-          if subset_name is 'state_name':
+          if subset_name == 'state_name':
             df.query('state_name == '+'"'+ee+'"',inplace=True)
-          if subset_name is 'siteid':
+          if subset_name == 'siteid':
             df.query('siteid == '+'"'+ee+'"',inplace=True)
        if reg is True and subset_epa is False:
           stats=open(finput.replace('.hdf','_')+startdatename+'_'+enddatename+'_reg_stats_domain.txt','w')
