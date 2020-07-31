@@ -218,7 +218,7 @@ if __name__ == '__main__':
       print((modcount+1))  
 #load the paired dataframe
       df = load_paired_data(xx)
-      mapping_table = {'OZONE':'O3', 'PM2.5':'PM25_TOT', 'PM10':'PMC_TOT', 'CO':'CO_new', 'NO':'NO_new', 'NO2':'NO2_new', 'SO2':'SO2_new','NOX':'NOX_new','NOY':'NOY_new','TEMP':'TEMP2','WS':'WSPD10','WD':'WDIR10','SRAD':'GSW','BARPR':'PRSFC','PRECIP':'RT','RHUM':'Q2'}
+      mapping_table = {'OZONE':'O3', 'PM2.5':'PM25_TOT', 'PM10':'PM10_new', 'CO':'CO_new', 'NO':'NO_new', 'NO2':'NO2_new', 'SO2':'SO2_new','NOX':'NOX_new','NOY':'NOY_new','TEMP':'TEMP2','WS':'WSPD10','WD':'WDIR10','SRAD':'GSW','BARPR':'PRSFC','PRECIP':'RT','RHUM':'Q2'}
       sub_map = {i: mapping_table[i] for i in species if i in mapping_table}
   
       df_replace = df.replace(0.0,np.nan) #Replace all exact 0.0 values with nan

@@ -109,7 +109,7 @@ if __name__ == '__main__':
     mapping_table = {
             'OZONE': 'O3',
             'PM2.5': 'PM25_TOT',
-            'PM10': 'PMC_TOT',
+            'PM10': 'PM10',
             'CO': 'CO',
             'NO': 'NO',
             'NO2': 'NO2',
