@@ -134,6 +134,7 @@ if __name__ == '__main__':
     parser.add_argument('-b',   '--subset_epa',  help='boolean set to True for subsetting by U.S. EPA region, state name, or siteid', type=bool, required=False, default=False)
     parser.add_argument('-sn',  '--subset_name', help='name of subset type (epa_region, state_name, or siteid)', type=str, required=False, default='epa_region')
     parser.add_argument('-e',   '--epa_regions', help='string/list input for set EPA Region acronymn, state name, or siteid',type=str,nargs='+', required=False, default=['R1'])
+    parser.add_argument('-c',   '--cutoff',      help='Set minimum cutoff concentration', type=float, required=False, default=0.0)
     parser.add_argument('-v',   '--verbose',     help='print debugging information', action='store_true', required=False)
     args = parser.parse_args()
 
@@ -145,6 +146,7 @@ if __name__ == '__main__':
     subset_epa   = args.subset_epa
     subset_name  = args.subset_name
     epa_regions  = args.epa_regions
+    cutoff       = args.cutoff
     verbose      = args.verbose
 
     for ee in epa_regions:
@@ -181,8 +183,11 @@ if __name__ == '__main__':
           stats=open(finput.replace('.hdf','_')+startdatename+'_'+enddatename+'_stats_domain.txt','w')          
        
 #Converts OZONE, PM10, or PM2.5 dataframe to NAAQS regulatory values
-       for jj in species: 
-       	df_replace = df.replace(0.0,np.nan) #Replace all values with exactly 0.0 
+       for jj in species:
+        mask =  (df[jj] > cutoff) #Mask to only keep observed values above cutoff
+        df =df.loc[mask] #Replace all observed values above cutoff with exactly 0.0
+#        df.loc[df[jj] > cutoff, df[jj]] = 0.0 #Replace all observed values above cutoff with exactly 0.0 
+       	df_replace = df.replace(0.0,np.nan) #Replace all observed values with that are 0.0 to be NaN 
        	df_drop=df_replace.dropna(subset=[jj,sub_map.get(jj)]) #Drops all rows with obs species = NaN        
        
         if jj == 'OZONE' and reg is True:
