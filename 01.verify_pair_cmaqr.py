@@ -112,14 +112,16 @@ if __name__ == '__main__':
             'CO': 'co',
             'NO': 'no',
             'NO2': 'no2',
-            'SO2': 'so2',
-            'TEMP': 'tmp',
+            'SO2': 'so2'
              }
     sub_map = {i: mapping_table[i] for i in species if i in mapping_table}
     use_these = [sub_map[i] for i in sub_map.keys()]
     invert_sub_map = dict(map(reversed, sub_map.items()))
     print(df.keys())
     dfpair = pair_point(da, df, use_these, interp)
+    
+#change to variable names for stats/analysis scripts
+    dfpair.rename(columns={"o3": "O3", "co": "CO_new", "no": "NO_new", "no2": "NO2_new", "so2": "SO2_new"},inplace=True)
 
     dfpair.to_hdf(
             'AIRNOW_CMAQ_' + start.strftime('%Y-%m-%d-%H') + '_' +
