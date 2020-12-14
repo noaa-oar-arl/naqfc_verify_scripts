@@ -102,6 +102,7 @@ if __name__ == '__main__':
         '--paired_data',
         help='paired data input file',
         type=str,
+        nargs='+',
         required=True)
     parser.add_argument(
         '-s', '--species', nargs='+', help='Species', required=False, default=['pm25_ugm3'])
