@@ -73,7 +73,7 @@ def make_spatial_bias_plot(df,
     date = pd.Timestamp(date)
     dt = date - initial_datetime
     dtstr = str(dt.days * 24 + dt.seconds // 3600).zfill(3)
-    plt.title(date.strftime('time=%Y/%m/%d %H:00 | CMAQ - AIRNOW '))
+    plt.title(date.strftime('time=%Y/%m/%d %H:00 | GEFS-Aer - AERONET '))
         
     if region == 'domain':
      latmin=-90.0

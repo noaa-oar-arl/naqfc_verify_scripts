@@ -133,7 +133,7 @@ if __name__ == '__main__':
     parser.add_argument('-ed',  '--enddate',     help='string end date to isolate periods for statistics YYYY-MM-DD HH:MM:SS', type=str, required=False, default=None)
     parser.add_argument('-s',   '--species',     help='string/list input for obs species-variables to create stats',type=str,nargs='+', required=False, default=['aod_550nm'])
     parser.add_argument('-b',   '--subset_giorgi',  help='boolean set to True for subsetting by GIORGI region', type=bool, required=False, default=False)
-    parser.add_argument('-g',   '--giorgi_regions', help='string/list input for set GIORGI regions',type=str,nargs='+', required=False, default=['R1'])
+    parser.add_argument('-g',   '--giorgi_regions', help='string/list input for set GIORGI regions',type=str,nargs='+', required=False, default=['domain'])
     parser.add_argument('-v',   '--verbose',     help='print debugging information', action='store_true', required=False)
     args = parser.parse_args()
 
