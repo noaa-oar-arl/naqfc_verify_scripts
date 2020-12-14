@@ -26,6 +26,7 @@ import seaborn as sns
 import numpy as np
 import monet
 from monet.util.tools import calc_8hr_rolling_max,calc_24hr_ave,get_relhum
+import dask.dataframe as dd
 sns.set_context('notebook')
 
 plt.ioff()
@@ -168,7 +169,8 @@ if __name__ == '__main__':
     scale       = args.scale
     
 #load the paired dataframe 
-    df = load_paired_data(paired_data)
+#    df = load_paired_data(paired_data)
+    df = dd.read_hdf(paired_data, '/*').compute()
     mapping_table = {'pm25_ugm3':'sfc_pm25', 'pm10_ugm3':'sfc_pm10'}
     sub_map = {i: mapping_table[i] for i in species if i in mapping_table}
 
