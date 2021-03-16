@@ -18,12 +18,24 @@ from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 import monet  
 from monet.util.tools import calc_8hr_rolling_max,calc_24hr_ave,get_relhum
-from monet.util.mystats import NO,NP,NOP,MO,MP,MdnO,MdnP,STDO,STDP,MB,WDMB_m,NMB,WDNMB_m,NMB_ABS,NME_m,NME_m_ABS,WDME_m,RMSE,WDRMSE_m,IOA_m,WDIOA_m,R2 
+from monet.util.mystats import NO,NP,NOP,MO,MP,MdnO,MdnP,STDO,STDP,MB,WDMB_m,NMB,WDNMB_m,NMB_ABS,NME_m,NME_m_ABS,WDME_m,RMSE,WDRMSE_m,IOA_m,WDIOA_m,R2,HSS,ETS,CSI 
 import pandas as pd
 import numpy as np
 from numpy import sqrt
 
 #Define all statistics and statistical plots desired
+
+def  calc_csi(obs,mod,minval,maxval):
+     """ Critical Success Index """
+     return CSI(obs,mod,minval,maxval)
+
+def  calc_ets(obs,mod,minval,maxval):
+     """ Equitable Threat Score """
+     return ETS(obs,mod,minval,maxval)
+
+def  calc_hss(obs,mod,minval,maxval):
+     """ Heidke Skill Score """
+     return HSS(obs,mod,minval,maxval)
 
 def  calc_r2(obs,mod):
      """ Coefficient of Determination (unit squared) """
@@ -136,6 +148,8 @@ if __name__ == '__main__':
     parser.add_argument('-e',   '--epa_regions', help='string/list input for set EPA Region acronymn, state name, or siteid',type=str,nargs='+', required=False, default=['R1'])
     parser.add_argument('-cyn', '--cutoffyesno', help='boolean set to True for setting cutoff value', type=bool, required=False, default=False)
     parser.add_argument('-c',   '--cutoff',      help='Set minimum cutoff concentration', type=float, required=False, default=0.0)
+    parser.add_argument('-min', '--minval',      help='Set minimum range value for scores such as CSI,etc', type=float, required=False, default=50.0)
+    parser.add_argument('-max', '--maxval',      help='Set maximum range value for scores such as CSI,etc', type=float, required=False, default=500.0)
     parser.add_argument('-v',   '--verbose',     help='print debugging information', action='store_true', required=False)
     args = parser.parse_args()
 
@@ -149,6 +163,8 @@ if __name__ == '__main__':
     epa_regions  = args.epa_regions
     cutoffyn     = args.cutoffyesno
     cutoff       = args.cutoff
+    minval       = args.minval
+    maxval       = args.maxval
     verbose      = args.verbose
 
     for ee in epa_regions:
@@ -332,6 +348,18 @@ if __name__ == '__main__':
         print('Pearsons Correlation Coefficient of ',sub_map.get(jj),'-',jj,' =  ', "{:8.2f}".format(r_stats))
         stats.write('Pearsons Correlation Coefficient of '+sub_map.get(jj)+'-'+jj+' =  '+str("{:8.2f}".format(r_stats))+'\n')
 
+        csi_stats=calc_csi(obs_stats,mod_stats,minval,maxval)
+        print('Critical Success Index of ',sub_map.get(jj),'-',jj,' =  ', "{:8.2f}".format(csi_stats))
+        stats.write('Critical Success Index of '+sub_map.get(jj)+'-'+jj+' =  '+str("{:8.2f}".format(csi_stats))+'\n')
+
+        ets_stats=calc_ets(obs_stats,mod_stats,minval,maxval)
+        print('Equitable Threat Score of ',sub_map.get(jj),'-',jj,' =  ', "{:8.2f}".format(ets_stats))
+        stats.write('Equitable Threat Score of '+sub_map.get(jj)+'-'+jj+' =  '+str("{:8.2f}".format(ets_stats))+'\n')
+ 
+        hss_stats=calc_hss(obs_stats,mod_stats,minval,maxval)
+        print('Heidke Skill Score of ',sub_map.get(jj),'-',jj,' =  ', "{:8.2f}".format(hss_stats))
+        stats.write('Heidke Skill Score of '+sub_map.get(jj)+'-'+jj+' =  '+str("{:8.2f}".format(hss_stats))+'\n')
+       
         print('Statistics done!')
         print('---------------------------------')
         stats.write('---------------------------------'+'\n')
