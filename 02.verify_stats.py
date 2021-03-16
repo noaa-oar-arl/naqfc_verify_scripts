@@ -148,7 +148,7 @@ if __name__ == '__main__':
     parser.add_argument('-e',   '--epa_regions', help='string/list input for set EPA Region acronymn, state name, or siteid',type=str,nargs='+', required=False, default=['R1'])
     parser.add_argument('-cyn', '--cutoffyesno', help='boolean set to True for setting cutoff value', type=bool, required=False, default=False)
     parser.add_argument('-c',   '--cutoff',      help='Set minimum cutoff concentration', type=float, required=False, default=0.0)
-    parser.add_argument('-min', '--minval',      help='Set minimum range value for scores such as CSI,etc', type=float, required=False, default=50.0)
+    parser.add_argument('-min', '--minval',      help='Set minimum range value for scores such as CSI,etc', type=float, required=False, default=70.0)
     parser.add_argument('-max', '--maxval',      help='Set maximum range value for scores such as CSI,etc', type=float, required=False, default=500.0)
     parser.add_argument('-v',   '--verbose',     help='print debugging information', action='store_true', required=False)
     args = parser.parse_args()
