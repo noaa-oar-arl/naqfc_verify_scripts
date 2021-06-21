@@ -99,13 +99,9 @@ def make_timeseries_epa(
     if diurnal is True:
      print('taking diurnal average...')
      df_time_diurnal=pd.date_range(start='2099-01-01 00:00:00', periods=24, freq="1h")
-     print(df_time_diurnal)
      df['local_hour_of_timestamp']=df['time_local'].dt.hour
      df=df.groupby('local_hour_of_timestamp').mean().reset_index()
-     #df['time']=df['local_hour_of_timestamp']
      df.index=df_time_diurnal
-     print(df.keys())
-     print(df)
     if modcount == 0:
      ax=df[col1].resample('H').mean().plot(marker='.',color='darkslategrey',label='OBS')
      ax=df[col2].resample('H').mean().plot(ax=ax,label='MOD')   
