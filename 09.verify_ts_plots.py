@@ -58,7 +58,7 @@ def load_paired_data(fname):
     return pd.read_hdf(fname)
 
 
-def make_plots(df, variable, obs_variable, startdate, enddate, vmin, vmax, ylog, region, modcount, out_name):
+def make_plots(df, variable, obs_variable, startdate, enddate, vmin, vmax, ylog, region, modcount, out_name, diurnal):
     
     print(
             ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
@@ -66,7 +66,7 @@ def make_plots(df, variable, obs_variable, startdate, enddate, vmin, vmax, ylog,
     print(
             ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")    
  
-    make_timeseries_epa(df, out_name, startdate, enddate, vmin, vmax, ylog, region, modcount,col1=obs_variable, col2=variable)
+    make_timeseries_epa(df, out_name, startdate, enddate, vmin, vmax, ylog, region, modcount, diurnal, col1=obs_variable, col2=variable)
 
 
 def make_timeseries_epa(
@@ -79,6 +79,7 @@ def make_timeseries_epa(
         ylog,
         region,
         modcount,
+        diurnal,
         col1='OZONE',
         col2='O3'
 ):
@@ -95,6 +96,16 @@ def make_timeseries_epa(
     if subset_name == 'siteid':
      print('subsetting...')
      df.query('siteid == '+'"'+region+'"',inplace=True)
+    if diurnal is True:
+     print('taking diurnal average...')
+     df_time_diurnal=pd.date_range(start='2099-01-01 00:00:00', periods=24, freq="1h")
+     print(df_time_diurnal)
+     df['local_hour_of_timestamp']=df['time_local'].dt.hour
+     df=df.groupby('local_hour_of_timestamp').mean().reset_index()
+     #df['time']=df['local_hour_of_timestamp']
+     df.index=df_time_diurnal
+     print(df.keys())
+     print(df)
     if modcount == 0:
      ax=df[col1].resample('H').mean().plot(marker='.',color='darkslategrey',label='OBS')
      ax=df[col2].resample('H').mean().plot(ax=ax,label='MOD')   
@@ -113,6 +124,8 @@ def make_timeseries_epa(
      plt.yscale('log')
     plt.xlim([startdate,enddate])
     plt.xlabel('TIME (UTC)')
+    if diurnal is True:
+     plt.xlabel('Diurnal Local Hour')
     plt.ylabel(r'Concentration (ppbV or micrograms/m-3)')
     plt.legend(loc=1)
     plt.tight_layout(pad=0)
@@ -155,6 +168,13 @@ if __name__ == '__main__':
         required=False,
         default=False)
     parser.add_argument(
+        '-di',
+        '--diurn',
+        help='boolean set to True for applying a diurnal average of time series',
+        type=bool,
+        required=False,
+        default=False)
+    parser.add_argument(
         '-sd',
         '--startdate',
         help='Startdate for time series over a period YYYY-MM-DD HH:MM:SS',
@@ -192,7 +212,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '-kzi', '--kz_iterations', help='Set kz iterations (default = 5, AQ Baseline Component, Weiss and Comrie (2005), removes cycles < 33 days)', 
          type=int, required=False, default=5)
-
+    
     args = parser.parse_args()
 
     paired_data = args.paired_data
@@ -209,7 +229,11 @@ if __name__ == '__main__':
     kzfilt      = args.kzfilter
     kzw         = args.kz_window
     kzi         = args.kz_iterations
+    diurnal     = args.diurn
 
+    if kzfilt is True and diurnal is True:
+     print('cannot apply both KZ filter and diurnal average, exiting...')
+     exit()
     for jj in species:
      plt.close() 
      modcount = 0
@@ -251,6 +275,7 @@ if __name__ == '__main__':
       else:
        df2=df2
 #subset for period, or use output frequency
+      
       if startdate != None and enddate != None:
 
        mask = (df2['time'] >= startdate) & (df2['time'] <= enddate)
@@ -267,6 +292,10 @@ if __name__ == '__main__':
         outname = "{}.{}.{}.{}.{}.{}".format(out_name, region, jj,startdatename, enddatename,'kz')
        if kzfilt is True and reg is True:
         outname = "{}.{}.{}.{}.{}.{}.{}".format(out_name, region, jj,startdatename, enddatename,'kz', 'reg')
+       if diurnal is True:
+        outname = "{}.{}.{}.{}.{}.{}".format(out_name, region, jj,startdatename, enddatename,'di')
+       if diurnal is True and reg is True:
+        outname = "{}.{}.{}.{}.{}.{}.{}".format(out_name, region, jj,startdatename, enddatename,'di', 'reg')
        if jj == 'PM2.5':
         outname = outname.replace('PM2.5','PM2P5')
        if region == 'domain':
@@ -280,6 +309,10 @@ if __name__ == '__main__':
         outname = "{}.{}.{}.{}".format(out_name,region, jj, 'kz')
        if kzfilt is True and reg is True:
         outname = "{}.{}.{}.{}.{}".format(out_name,region, jj, 'kz', 'reg')
+       if diurnal is True:
+        outname = "{}.{}.{}.{}".format(out_name,region, jj, 'di')
+       if diurnal is True and reg is True:
+        outname = "{}.{}.{}.{}.{}".format(out_name,region, jj, 'di', 'reg')
        if jj == 'PM2.5':
         outname = outname.replace('PM2.5','PM2P5')
        if region == 'domain':
@@ -294,5 +327,5 @@ if __name__ == '__main__':
       else:
        dfnew_drop2 = dfnew_drop
 # make the plots
-      make_plots(dfnew_drop2, sub_map.get(jj), jj, startdate, enddate, vmin, vmax, ylog, region, modcount,outname)
+      make_plots(dfnew_drop2, sub_map.get(jj), jj, startdate, enddate, vmin, vmax, ylog, region, modcount, outname, diurnal)
       modcount=modcount+1
